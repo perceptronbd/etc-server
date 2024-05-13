@@ -2,22 +2,30 @@ const Income = require("../../models/incomeModel");
 
 const addIncome = async (req, res) => {
   try {
-    // Extract fields from the request body
-    const { incomeTitle, amount } = req.body;
+    const { incomeItems } = req.body;
 
-    if (
-      typeof incomeTitle !== "string" ||
-      typeof amount !== "number" ||
-      amount < 0
-    ) {
+    if (!Array.isArray(incomeItems) || incomeItems.length === 0) {
       return res.status(400).json({
-        message:
-          "Invalid data. Please ensure all required fields are properly formatted.",
+        message: "Income data should be provided as an array of items.",
       });
     }
 
+    // Validate each income item
+    for (const item of incomeItems) {
+      if (
+        typeof item.incomeTitle !== "string" ||
+        typeof item.amount !== "number" ||
+        item.amount < 0
+      ) {
+        return res.status(400).json({
+          message:
+            "Invalid data. Please ensure all income items have properly formatted fields.",
+        });
+      }
+    }
+
     // Create a new Income instance with the provided data
-    const newIncome = new Income({ incomeTitle, amount });
+    const newIncome = new Income({ incomeItems });
 
     // Save the new record to the database
     await newIncome.save();
