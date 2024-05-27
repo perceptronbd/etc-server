@@ -24,6 +24,7 @@ const errorHandler = require("./ERP/middleware/errorMiddleware");
 const mobileErrorHandler = require("./Mobile_app/middleware/errorMiddleware");
 const indirectExpenseRoutes = require("./ERP/routes/indirectExpenseRoutes");
 const incomeRoutes = require("./ERP/routes/incomeRoutes");
+const incomeStatementRoute = require("./ERP/routes/incomeStatementRoute");
 
 // const mobileUserModel = require("./models/mobileUserModel");
 // const bcrypt = require("bcrypt");
@@ -58,6 +59,7 @@ app.use("/api", stockRoute);
 app.use("/api", topTenRoute);
 app.use("/api", indirectExpenseRoutes);
 app.use("/api", incomeRoutes);
+app.use("/api", incomeStatementRoute);
 
 //Mobile Routes
 app.use("/mobile", mobileUserRoute);
