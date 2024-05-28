@@ -48,13 +48,13 @@ const getPurchaseReportForLast30Days = async (req, res) => {
     });
 
     // Log the fetched purchases and sales for debugging
-    console.log("Fetched Purchases:", purchases);
+    // console.log("Fetched Purchases:", purchases);
     console.log("Fetched Sales:", sales);
 
     // Initialize total sums
     let totalPurchasingPrice = 0;
     let totalTransportationCost = 0;
-    let totalFinalPrice = 0;
+    let totalSalesPrice = 0;
 
     // Process each purchase to calculate the required sums
     purchases.forEach((purchase) => {
@@ -64,7 +64,7 @@ const getPurchaseReportForLast30Days = async (req, res) => {
 
     // Process each sale to calculate the total final price
     sales.forEach((sale) => {
-      totalFinalPrice += sale.finalPrice || 0;
+      totalSalesPrice += sale.finalPrice || 0;
     });
 
     // Calculate the combined total
@@ -73,7 +73,7 @@ const getPurchaseReportForLast30Days = async (req, res) => {
     // Log the calculated totals for debugging
     console.log("Total Purchase Amount:", totalPurchasingPrice);
     console.log("Total Transportation Cost:", totalTransportationCost);
-    console.log("Total Final Price from Sales:", totalFinalPrice);
+    console.log("Total Final Price from Sales:", totalSalesPrice);
     console.log("Total:", total);
 
     // Respond with the calculated totals
@@ -81,7 +81,7 @@ const getPurchaseReportForLast30Days = async (req, res) => {
       totalPurchasingPrice,
       totalTransportationCost,
       total,
-      totalFinalPrice,
+      totalSalesPrice,
     });
   } catch (error) {
     console.error("Error fetching purchases:", error);
