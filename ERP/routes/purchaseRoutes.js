@@ -10,17 +10,8 @@ const {
   getallPurchaseReport,
 } = require("../controllers/purchaseController");
 
-router.post(
-  "/addPurchase",
-  // checkLogin,
-  //  productManagement,
-  addPurchase
-);
+router.post("/addPurchase", checkLogin, productManagement, addPurchase);
 router.get("/getallPurchase", getAllPurchases);
-router.get(
-  "/getallPurchaseReport",
-  //  checkLogin,
-  getallPurchaseReport
-);
+router.get("/getallPurchaseReport", checkLogin, getallPurchaseReport);
 
 module.exports = router;

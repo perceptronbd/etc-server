@@ -1,5 +1,7 @@
+const Expense = require("../../models/indirectExpenseModel");
 const purchaseModel = require("../../models/purchaseModel");
 const salesModel = require("../../models/salesModel");
+
 const getPurchaseReportForLast30Days = async (req, res) => {
   try {
     let currentDate, pastDate;
@@ -47,49 +49,58 @@ const getPurchaseReportForLast30Days = async (req, res) => {
       },
     });
 
-    // Log the fetched purchases and sales for debugging
-    // console.log("Fetched Purchases:", purchases);
-    console.log("Fetched Sales:", sales);
+    // Fetch expense records within the date range
+    const expenses = await Expense.find({
+      created_at: {
+        $gte: pastDate,
+        $lte: currentDate,
+      },
+    });
 
     // Initialize total sums
     let totalPurchasingPrice = 0;
     let totalTransportationCost = 0;
-    let totalSalesPrice = 0;
+    let totalExpenseAmount = 0;
+    let expenseItems = [];
 
     // Process each purchase to calculate the required sums
     purchases.forEach((purchase) => {
-      totalPurchasingPrice += purchase.totalPurchasingPrice;
-      totalTransportationCost += purchase.transportationCost;
+      totalPurchasingPrice += purchase.totalPurchasingPrice || 0;
+      totalTransportationCost += purchase.transportationCost || 0;
     });
 
-    // Process each sale to calculate the total final price
-    sales.forEach((sale) => {
-      totalSalesPrice += sale.finalPrice || 0;
+    // Process each expense to calculate the total expense amount and collect expense items
+    expenses.forEach((expense) => {
+      expense.expenseItems.forEach((item) => {
+        totalExpenseAmount += item.amount;
+        expenseItems.push({
+          expenseTitle: item.expenseTitle,
+          amount: item.amount,
+          _id: item._id,
+        });
+      });
     });
 
     // Calculate the combined total
-    const total = totalPurchasingPrice + totalTransportationCost;
-
-    // Log the calculated totals for debugging
-    console.log("Total Purchase Amount:", totalPurchasingPrice);
-    console.log("Total Transportation Cost:", totalTransportationCost);
-    console.log("Total Final Price from Sales:", totalSalesPrice);
-    console.log("Total:", total);
+    const totalPurchaseCost = totalPurchasingPrice + totalTransportationCost;
+    const netAmount = totalExpenseAmount;
 
     // Respond with the calculated totals
     res.status(200).json({
       totalPurchasingPrice,
       totalTransportationCost,
-      total,
-      totalSalesPrice,
+      totalPurchaseCost,
+      expenses: expenseItems,
+      netAmount,
     });
   } catch (error) {
-    console.error("Error fetching purchases:", error);
+    console.error("Error fetching data:", error);
     if (!res.headersSent) {
       res.status(500).json({ message: "Internal server error" });
     }
   }
 };
+
 module.exports = {
   getPurchaseReportForLast30Days,
 };
