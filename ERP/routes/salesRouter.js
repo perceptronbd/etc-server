@@ -11,12 +11,7 @@ const {
 const { salesManagement } = require("../middleware/authMiddleware");
 const { checkLogin } = require("../middleware/checkLogin");
 
-router.post(
-  "/addsales",
-  //  checkLogin
-  //  , salesManagement,
-  addSale
-);
+router.post("/addsales", checkLogin, salesManagement, addSale);
 router.get(
   "/get-all-products-by-branch/:id",
   checkLogin,
