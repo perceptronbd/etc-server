@@ -12,10 +12,6 @@ const {
 
 router.post("/addPurchase", checkLogin, productManagement, addPurchase);
 router.get("/getallPurchase", getAllPurchases);
-router.get(
-  "/getallPurchaseReport",
-  //  checkLogin,
-  getallPurchaseReport
-);
+router.get("/getallPurchaseReport", checkLogin, getallPurchaseReport);
 
 module.exports = router;
