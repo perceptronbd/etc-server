@@ -4,16 +4,19 @@ const userController = require("../controllers/mobileUserController");
 const profileUpdateController = require("../controllers/profileUpdateController");
 const cartController = require("../controllers/cartController");
 const orderController = require("../controllers/orderController");
-const redeemCSB = require("../controllers/redeemCSBtotaka");
-const getCSBandTakaController = require("../controllers/getCSBandTakaController");
+// const redeemCSB = require("../controllers/redeemCSBtotaka");
+// const getCSBandTakaController = require("../controllers/getCSBandTakaController");
 const bankController = require("../controllers/bankController");
 const commonColtroller = require("../../CommonControllers/getProducts");
 const withdrawController = require("../controllers/withdrawController");
 const walletHistoryController = require("../controllers/walletHistoryController");
 const authenticateUser = require("../middleware/authMiddleware");
 
-const {upload} = require("../controllers/profileUpdateController");
-
+const { upload } = require("../controllers/profileUpdateController");
+const {
+  redeemCSBtoTaka,
+  getCSBandTaka,
+} = require("../controllers/csbAndTakaController");
 
 //user
 router.post("/register", userController.register);
@@ -79,7 +82,7 @@ router.get(
 );
 
 //wallet
-router.post("/redeemCSB", authenticateUser, redeemCSB.redeemCSBtoTaka);
+router.post("/redeemCSB", authenticateUser, redeemCSBtoTaka);
 router.post("/withdraw", authenticateUser, withdrawController.createWithdraw);
 router.get(
   "/getwithdraw",
@@ -91,11 +94,7 @@ router.get(
   authenticateUser,
   walletHistoryController.walletHistory
 );
-router.get(
-  "/get-csb-and-taka",
-  authenticateUser,
-  getCSBandTakaController.getCSBandTaka
-);
+router.get("/get-csb-and-taka", authenticateUser, getCSBandTaka);
 
 //bank
 router.post("/addBank", authenticateUser, bankController.createBank);
@@ -104,6 +103,5 @@ router.delete("/deleteBank", authenticateUser, bankController.deleteBank);
 
 //common
 router.get("/get-products", commonColtroller.getAllProducts);
-
 
 module.exports = router;

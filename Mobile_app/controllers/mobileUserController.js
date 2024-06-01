@@ -128,3 +128,5 @@ exports.login = asyncHandler(async (req, res) => {
     message: "User logged in successfully",
   });
 });
+
+// getUserByPhoneNumber
