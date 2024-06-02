@@ -5,15 +5,19 @@ const profileUpdateController = require("../controllers/profileUpdateController"
 const cartController = require("../controllers/cartController");
 const orderController = require("../controllers/orderController");
 const redeemCSB = require("../controllers/redeemCSBtotaka");
-const getCSBandTakaController = require("../controllers/getCSBandTakaController");
+const getCSBandTakaController = require("../controllers/csbAndTakaController");
 const bankController = require("../controllers/bankController");
 const commonColtroller = require("../../CommonControllers/getProducts");
 const withdrawController = require("../controllers/withdrawController");
 const walletHistoryController = require("../controllers/walletHistoryController");
 const authenticateUser = require("../middleware/authMiddleware");
 
-const {upload} = require("../controllers/profileUpdateController");
-
+const { upload } = require("../controllers/profileUpdateController");
+// const { getCSBandTaka } = require("../controllers/csbAndTakaController");
+// const {
+//   getCSBandTaka,
+//   getUserByMobileNumber,
+// } = require("../controllers/csbAndTakaController");
 
 //user
 router.post("/register", userController.register);
@@ -70,6 +74,14 @@ router.get(
   cartController.getCartDetails
 );
 
+router.get(
+  "/get-user-by-number",
+  authenticateUser,
+  getCSBandTakaController.getUserByMobileNumber
+);
+
+router.post("/send-csb", authenticateUser, getCSBandTakaController.sendCSB);
+
 //order
 router.post("/place-order", authenticateUser, orderController.placeOrder);
 router.get(
@@ -104,6 +116,5 @@ router.delete("/deleteBank", authenticateUser, bankController.deleteBank);
 
 //common
 router.get("/get-products", commonColtroller.getAllProducts);
-
 
 module.exports = router;
